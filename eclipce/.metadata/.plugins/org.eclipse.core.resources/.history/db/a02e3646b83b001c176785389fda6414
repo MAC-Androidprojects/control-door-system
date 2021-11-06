@@ -1,0 +1,24 @@
+/*
+ * timer0.h
+ *
+ *  Created on: Nov 2, 2021
+ *      Author: Mohamed Emad
+ */
+
+#ifndef TIMER0_H_
+#define TIMER0_H_
+
+typedef enum {
+
+}timer0_prescale;
+
+
+typedef struct {
+	timer0_init_value val ;
+	timer0_prescale prescaler ;
+	timer0_mode mode;
+	timer0_compare_value comp_val ;
+}timer0_config;
+
+
+#endif /* TIMER0_H_ */

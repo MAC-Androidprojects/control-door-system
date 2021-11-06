@@ -1,0 +1,9 @@
+eclipse.preferences.version=1
+environment/project/de.innot.avreclipse.configuration.app.debug.659954616/AVRTARGETFCPU/delimiter=;
+environment/project/de.innot.avreclipse.configuration.app.debug.659954616/AVRTARGETFCPU/operation=replace
+environment/project/de.innot.avreclipse.configuration.app.debug.659954616/AVRTARGETFCPU/value=8000000
+environment/project/de.innot.avreclipse.configuration.app.debug.659954616/AVRTARGETMCU/delimiter=;
+environment/project/de.innot.avreclipse.configuration.app.debug.659954616/AVRTARGETMCU/operation=replace
+environment/project/de.innot.avreclipse.configuration.app.debug.659954616/AVRTARGETMCU/value=atmega16
+environment/project/de.innot.avreclipse.configuration.app.debug.659954616/append=true
+environment/project/de.innot.avreclipse.configuration.app.debug.659954616/appendContributed=true

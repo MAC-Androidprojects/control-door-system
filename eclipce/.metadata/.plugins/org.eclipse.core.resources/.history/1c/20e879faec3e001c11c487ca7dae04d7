@@ -1,0 +1,188 @@
+/*
+ * main_MC2.c
+ *
+ *  Created on: Nov 1, 2021
+ *      Author: Mohamed Emad
+ */
+#define F_CPU 8000000
+
+#include"uart.h"
+#include"lcd.h"
+#include<avr/io.h>
+#include<util/delay.h>
+#include"external_eeprom.h"
+#include"twi.h"
+#include"std_types.h"
+#include"dc_motor.h"
+#include"timer0.h"
+#include"buzzer.h"
+
+void receive_pass(uint8 saveFlag);
+void save_pass();
+void read_pass();
+void check_pass(uint8 *pass1 , uint8 *pass2);
+void door_control();
+void timer_normal_processing();
+void breakdown_state_buzzer();
+void timer_normal_processing_error_mc2();
+
+
+uint8 pass[5] ;
+uint8 stored_pass[5];
+uint16 timer_flag = 0 ;
+uint16 timer_error_flag = 0 ;
+uint8 err_stop = 0 ;
+uint8 stop_open = 0;
+uint8 stop_waiting = 0 ;
+uint8 stop_close = 0 ;
+
+timer0_config config = {0 , NORMAL , 0 ,ONE_ZERO_TWO_FOUR};
+
+
+int main(){
+	uart_ConfigType conifg_uart = {DISABLED , ONE_BIT , EIGHT_BIT , 9600};
+	UART_init(&conifg_uart);
+	i2c_ConfigType config_i2c = {500000 , 0x01};
+	TWI_init(&config_i2c);
+	DcMotor_Init();
+	LCD_init();
+	SREG |= (1 << 7);
+	while(1){
+		receive_pass(1);
+	}
+}
+void receive_pass(uint8 saveFlag){
+	uint8 state_flag ;
+	static unsigned int num_of_repeat = 0 ;
+	/*This loop receives the password*/
+	for(int i = 0 ; i< 5 ; i++){
+		pass[i] = UART_recieveByte();
+	}
+	state_flag = UART_recieveByte();
+	if (saveFlag == 1){
+		save_pass();
+	}
+	else if(saveFlag == 0){
+		num_of_repeat++ ;
+		if(num_of_repeat == 3){
+			num_of_repeat = 0;
+			UART_sendByte(3);
+			breakdown_state_buzzer();
+		}
+		else{
+			check_pass(pass, stored_pass , state_flag);
+		}
+	}
+}
+/*
+ * Description :
+ * This function saves in EEprom
+ */
+void save_pass(){
+	/*This loop saves the password in EEprom*/
+	for(int i = 0 ; i< 5 ; i++){
+		EEPROM_writeByte(0x0311+i , pass[i]);
+		_delay_ms(10);
+	}
+	read_pass();
+	for (int i = 0 ;i <5 ; i++){
+		LCD_intgerToString(stored_pass[i]);
+		_delay_ms(200);
+	}
+	receive_pass(0);
+}
+/*
+ * Description :
+ * This function reads the password saved in eeprom
+ */
+void read_pass(){
+	for(int i = 0 ; i< 5 ; i++){
+		EEPROM_readByte(0x0311+i , stored_pass + i);
+		_delay_ms(10);
+	}
+}
+
+void check_pass(uint8 *pass1 , uint8 *pass2 , uint8 state_flag){
+	uint8 is_matched = 0 ;
+	LCD_clearScreen();
+	for(int i = 0 ; i<5 ; i++){
+		if(pass1[i] != pass2[i]){
+			is_matched = 1 ;
+		}
+	}
+	if (is_matched){
+		UART_sendByte(is_matched);
+		receive_pass(0);
+
+	}
+	else{
+		UART_sendByte(is_matched);
+		if(state_flag == 0){
+			door_control();
+		}
+		else {
+			receive_pass(1);
+		}
+	}
+}
+/*
+ * Description:
+ * This function simulates the door unlocking step
+ */
+void door_control(){
+	TIMER0_init(&config);
+	TIMER0_setCallBack(timer_normal_processing);
+	/*First parameter is the direction of rotating*/
+	/* Second parameter is the speed of motor in precent*/
+	DcMotor_Rotate(CLK_WISE , 30);
+	while(!stop_open){};
+	DcMotor_Rotate(STOP , 0);
+	while(!stop_waiting){};
+	DcMotor_Rotate(ANTI_CLK_WISE , 30);
+	while(!stop_close){};
+	DcMotor_Rotate(STOP , 0);
+	stop_open = 0 ;
+	stop_waiting = 0 ;
+	stop_close = 0 ;
+	receive_pass(0);
+
+}
+
+void breakdown_state_buzzer(){
+	TIMER0_init(&config);
+	TIMER0_setCallBack(timer_normal_processing_error_mc2);
+	BUZZER_init();
+	BUZZER_on();
+	while(!err_stop){}
+	BUZZER_off();
+	receive_pass(0);
+
+}
+
+void timer_normal_processing(){
+	timer_flag++;
+	_delay_ms(10);
+	if(timer_flag == 465){
+		stop_open = 1 ;
+	}
+	else if(timer_flag == 555){
+		stop_waiting = 1 ;
+	}
+	else if (timer_flag == 1015){
+		stop_close = 1;
+		timer_flag = 0;
+		TIMER0_Deinit();
+	}
+}
+
+void timer_normal_processing_error_mc2(){
+	timer_error_flag++ ;
+	if(timer_error_flag == 1830){
+		err_stop = 1 ;
+		TIMER0_Deinit();
+	}
+}
+
+
+
+

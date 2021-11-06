@@ -1,0 +1,31 @@
+/*
+ * timer0.h
+ *
+ *  Created on: Nov 2, 2021
+ *      Author: Mohamed Emad
+ */
+
+#ifndef TIMER0_H_
+#define TIMER0_H_
+
+/*******************************************************************************
+ *                      Definitions                                            *
+ *******************************************************************************/
+
+/*
+ * The type that is responioble of choosing the prescaler
+ */
+typedef enum {
+	NO_CLK , NO_PRESCALER , EIGHT , SIX_FOUR , TWO_FIVE_SIX , ONE_ZERO_TWO_FOUR , EXT_FALLING , EXT_RISING
+}timer0_prescale;
+
+
+typedef struct {
+	uint8 val ;
+	timer0_prescale prescaler ;
+	timer0_mode mode;
+	timer0_compare_value comp_val ;
+}timer0_config;
+
+
+#endif /* TIMER0_H_ */

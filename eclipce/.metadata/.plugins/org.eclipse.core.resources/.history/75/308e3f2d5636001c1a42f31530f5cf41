@@ -1,0 +1,24 @@
+/*
+ * main.c
+ *
+ *  Created on: Oct 26, 2021
+ *      Author: Mohamed Emad
+ */
+
+#include"buzzer.h"
+#include<util/delay.h>
+#include"gpio.h"
+#include"common_macros.h"
+
+
+int main(void){
+//	BUZZER_init();
+	while(1){
+		GPIO_setupPinDirection(BUZZER_PORT, BUZZER_PIN, PIN_OUTPUT);
+		GPIO_writePin(BUZZER_PORT, BUZZER_PIN, LOGIC_HIGH);
+//
+//		BUZZER_on();
+//		_delay_ms(5000);
+//		BUZZER_off();
+	}
+}

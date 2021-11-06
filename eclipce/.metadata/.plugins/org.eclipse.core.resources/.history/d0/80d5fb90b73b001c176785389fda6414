@@ -1,0 +1,17 @@
+/*
+ * timer0.h
+ *
+ *  Created on: Nov 2, 2021
+ *      Author: Mohamed Emad
+ */
+
+#ifndef TIMER0_H_
+#define TIMER0_H_
+
+
+typedef struct {
+
+}timer0_config;
+
+
+#endif /* TIMER0_H_ */

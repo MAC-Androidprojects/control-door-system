@@ -1,0 +1,38 @@
+23:38:15 **** Incremental Build of configuration Debug for project Final_Priject_MC01 ****
+make all 
+Building file: ../main.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega16 -DF_CPU=1000000UL -MMD -MP -MF"main.d" -MT"main.o" -c -o "main.o" "../main.c"
+../main.c:8:1: warning: "F_CPU" redefined
+<command-line>: warning: this is the location of the previous definition
+In file included from ../main.c:12:
+c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+Finished building: ../main.c
+ 
+Building target: Final_Priject_MC01.elf
+Invoking: AVR C Linker
+avr-gcc -Wl,-Map,Final_Priject_MC01.map -mmcu=atmega16 -o "Final_Priject_MC01.elf"  ./gpio.o ./keypad.o ./lcd.o ./main.o ./timer0.o ./uart.o   
+Finished building target: Final_Priject_MC01.elf
+ 
+Invoking: AVR Create Extended Listing
+avr-objdump -h -S Final_Priject_MC01.elf  >"Final_Priject_MC01.lss"
+Finished building: Final_Priject_MC01.lss
+ 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega16 Final_Priject_MC01.elf
+AVR Memory Usage
+----------------
+Device: atmega16
+
+Program:   11152 bytes (68.1% Full)
+(.text + .data + .bootloader)
+
+Data:        136 bytes (13.3% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+
+23:38:16 Build Finished. 0 errors, 2 warnings. (took 1s.152ms)
+

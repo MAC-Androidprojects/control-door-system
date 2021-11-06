@@ -1,0 +1,22 @@
+/*
+ * buzzer.h
+ *
+ *  Created on: Oct 26, 2021
+ *      Author: Mohamed Emad
+ */
+
+#ifndef BUZZER_H_
+#define BUZZER_H_
+#include"gpio.h"
+
+#define BUZZER_PORT PORTA_ID
+#define BUZZER_PIN PIN0_ID
+
+void BUZZER_init();
+void BUZZER_on();
+void BUZZER_off();
+
+
+
+
+#endif /* BUZZER_H_ */

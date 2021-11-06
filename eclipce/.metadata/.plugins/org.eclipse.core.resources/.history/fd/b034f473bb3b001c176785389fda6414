@@ -1,0 +1,25 @@
+/*
+ * timer0.c
+ *
+ *  Created on: Nov 2, 2021
+ *      Author: Mohamed Emad
+ */
+
+#include"timer0.h"
+#include "avr/io.h" /* To use the UART Registers */
+
+
+
+void TIMER0_init(timer0_config *config_ptr){
+	TCNT0 = config_ptr->init_val; /* Set Timer initial value to 0 */
+	TCCR0 |= (1<<FOC0) ; /* non-pwm mode */
+	if (config_ptr->mode == NORMAL){
+		TIMSK = (1<<TOIE0); /* Enable Timer0 Overflow Interrupt */
+	}
+	else {
+		TIMSK = (1 << OCIE0);/* Enable Timer0 compare mode Interrupt */
+	}
+
+
+
+}

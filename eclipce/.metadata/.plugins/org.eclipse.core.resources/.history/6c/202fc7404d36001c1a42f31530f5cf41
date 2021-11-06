@@ -1,0 +1,33 @@
+/*
+ * main.c
+ *
+ *  Created on: Oct 26, 2021
+ *      Author: Mohamed Emad
+ */
+
+#include "keypad.h"
+#include "uart.h"
+#include <util/delay.h> /* For the delay functions */
+
+int main(void)
+{
+	uint8 key_num;
+
+	uart_ConfigType structure = {DISABLED , ONE_BIT , EIGHT_BIT , 9600};
+
+	/* Initialize the UART driver with Baud-rate = 9600 bits/sec */
+	UART_init(&structure);
+
+	while(1)
+	{
+		/* Get the pressed button from keypad */
+		key_num = KEYPAD_getPressedKey();
+
+		/* Send the pressed key to MC2 through UART */
+		UART_sendByte(key_num);
+
+		/* Wait 500msec before getting a new press from the keypad buttons, Press time is 500msec */
+		_delay_ms(500);
+
+	}
+}

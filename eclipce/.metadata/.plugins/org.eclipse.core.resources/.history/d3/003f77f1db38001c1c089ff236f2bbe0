@@ -1,0 +1,28 @@
+/*
+ * main.c
+ *
+ *  Created on: Oct 26, 2021
+ *      Author: Mohamed Emad
+ */
+
+#include"lcd.h"
+#include"keypad.h"
+#include<util/delay.h>
+
+void get_pass(void);
+
+
+int main(void){
+	LCD_init();
+	while(1){
+		get_pass();
+
+	}
+}
+
+void get_pass(void){
+	for (int i = 0 ; i< 5 ; i++){
+		char pressed_key = (char)KEYPAD_getPressedKey();
+		LCD_displayCharacter(pressed_key);
+	}
+}
